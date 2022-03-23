@@ -24,12 +24,9 @@ class TestLanguages(TestBase):
         EXPECTED_EN_LANG="English"
         EXPECTED_TITLE_RU="Московская Биржа"
         EXPECTED_TITLE_EN="Moscow Exchane"
-        try:
-            base_page = go_to_base_page
-            assert EXPECTED_TITLE_RU == base_page._driver.title
-            base_page.change_lang_button.click()
-            assert EXPECTED_TITLE_EN == base_page._driver.title
-            base_page.change_lang_button.click()
-            assert EXPECTED_TITLE_RU == base_page._driver.title
-        except Exception as err:
-            print('Handling test run error:', err)
+        base_page = go_to_base_page
+        assert EXPECTED_TITLE_RU == base_page._driver.title
+        base_page.change_lang_button.click()
+        assert EXPECTED_TITLE_EN == base_page._driver.title
+        base_page.change_lang_button.click()
+        assert EXPECTED_TITLE_RU == base_page._driver.title
