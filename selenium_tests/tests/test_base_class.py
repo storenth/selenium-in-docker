@@ -13,10 +13,6 @@ class TestBase(object):
     @staticmethod
     @pytest.fixture(scope="function")
     def go_to_base_page(get_driver: WebDriver) -> BasePage:
-        """
-        Open the browser and go to the Base webpage
-        :param get_driver: Selenium driver
-        :return: a BasePage instance
-        """
+        """Open the browser and go to the Base webpage"""
         get_driver.get(TestBase.TESTING_URL)
         return BasePage(get_driver)
