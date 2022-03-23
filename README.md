@@ -98,6 +98,8 @@ Let's suppose you want to take advantage of this process but you don't need all 
 Using our example, we will execute only the tests contained under the module `selenium_tests/tests/tests_searches.py`.
 Run the following:
 ```
+docker-compose build
+docker-compose up -d
 docker-compose run --rm pytest-host tests/test_searches.py
 ```
 
