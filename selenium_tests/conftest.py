@@ -32,7 +32,7 @@ def pytest_addoption(parser):
         help="Set the port where the host who has the driver is listening. By default '4444'"
     )
 
-
+@pytest.fixture(scope="function")
 def get_driver(request) -> WebDriver:
     """
     Generate the Selenium driver that will be used by the tests
@@ -51,4 +51,4 @@ def get_driver(request) -> WebDriver:
     driver.implicitly_wait(IMPLICITLY_WAIT)
     driver.set_window_size(width=1400, height=1024)
     yield driver
-    driver.close()
+    driver.quit()
