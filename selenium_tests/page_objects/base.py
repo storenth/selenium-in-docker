@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from typing import NoReturn, Final
+from xmlrpc.client import Boolean
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 
@@ -11,21 +12,20 @@ class BasePage(object):
     Base class to initialize the base page that will be called from all pages
     """
 
-    BASE_URL: Final = "http://automationpractice.com/index.php"
+    BASE_URL: Final = "https://www.moex.com/"
     page_uri = ""
-    BASE_TITLE: Final = "My Store"
+    BASE_TITLE: Final = "Московская Биржа"
     specific_title = ""
 
     def __init__(self, driver: WebDriver):
         self._driver = driver
         self.wait_for_page_to_load()
         self._current_url_matches()
-        self._title_matches()
 
-    # XPATH locators
-    _logo_image_locator = "//img[@class='logo img-responsive']"
-    _search_input_locator = "//input[@id='search_query_top']"
-    _search_button_locator = "//button[@name='submit_search']"
+    # CSS locators
+    _logo_image_locator = "[class=header__logo]"
+    _search_input_locator = "[class*=search-field__control]"
+    _change_lang_locator = "[class*=_lang]"
 
     # Web elements
     @property
@@ -42,17 +42,17 @@ class BasePage(object):
         self.search_input.send_keys(query)
 
     @property
-    def search_button(self) -> WebElement:
-        return self._get_element(self._search_button_locator)
+    def change_lang_button(self) -> WebElement:
+        return self._get_element(self._change_lang_locator)
 
     # Methods
-    def _get_element(self, xpath: str) -> WebElement:
+    def _get_element(self, css: str) -> WebElement:
         """
         Wait for a element to be present on the screen
-        :param xpath: xpath of the element to wait for
+        :param css: css of the element to wait for
         :return: the WebElement
         """
-        return self._driver.find_element_by_xpath(xpath)
+        return self._driver.find_element_by_css_selector(css)
 
     def _current_url_matches(self) -> NoReturn:
         """
@@ -63,25 +63,12 @@ class BasePage(object):
         current_url = self._driver.current_url
         assert url in current_url, "URL '{0}' not on the current URL of the page ('{1}')".format(url, current_url)
 
-    def _title_matches(self) -> NoReturn:
+    def title_matches(self, title: str) -> Boolean:
         """
         Make sure the title of the page matches the expected title
-        :return:
+        :return: True if the title matches the expected title
         """
-        title = "" if self.specific_title == "" else "{} - ".format(self.specific_title) + self.BASE_TITLE
-        current_title = self._driver.title
-        assert title in current_title, "Name '{0}' not on the title of the page ('{1}')".format(title, current_title)
-
-    def search_product(self, product: str):
-        """
-        Search for a product
-        :param product: name to search by
-        :return: a SearchPage instance
-        """
-        from . import SearchPage    # not a good praxis but it's a way of avoiding circular imports
-        self.search_input = product
-        self.search_button.click()
-        return SearchPage(self._driver)
+        return title == self._driver.title
 
     def wait_for_page_to_load(self) -> NoReturn:
         """

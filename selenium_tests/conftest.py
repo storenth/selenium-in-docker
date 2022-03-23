@@ -10,7 +10,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 
 IMPLICITLY_WAIT: Final[int] = 30
-GECKODRIVER_PATH: Final[str] = os.path.join(pathlib.Path(__file__).parent.absolute(), "geckodriver")
+CHROMDERIVER_PATH: Final[str] = os.path.join(pathlib.Path(__file__).parent.absolute(), "chromedriver")
 
 
 def pytest_addoption(parser):
@@ -33,7 +33,6 @@ def pytest_addoption(parser):
     )
 
 
-@pytest.fixture(scope="session")
 def get_driver(request) -> WebDriver:
     """
     Generate the Selenium driver that will be used by the tests
@@ -45,10 +44,11 @@ def get_driver(request) -> WebDriver:
         driver = webdriver.Remote(
             "http://{host}:{port}/wd/hub".format(
                 host=request.config.getoption("--rmt-host"), port=request.config.getoption("--rmt-port")
-            ), DesiredCapabilities.FIREFOX
+            ), DesiredCapabilities.CHROME
         )
     else:
-        driver = webdriver.Firefox(executable_path=GECKODRIVER_PATH)
+        driver = webdriver.CHROME(executable_path=CHROMDERIVER_PATH)
     driver.implicitly_wait(IMPLICITLY_WAIT)
+    driver.set_window_size(width=1400, height=1024)
     yield driver
     driver.close()

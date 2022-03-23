@@ -3,12 +3,12 @@ from typing import Final
 import pytest
 from selenium.webdriver.remote.webdriver import WebDriver
 
-from ..page_objects.base import BasePage
+from page_objects.base import BasePage
 
 
 class TestBase(object):
 
-    TESTING_URL: Final[str] = "http://automationpractice.com"
+    TESTING_URL: Final[str] = "https://www.moex.com/"
 
     @staticmethod
     @pytest.fixture(scope="function")

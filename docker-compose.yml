@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 
 services:
   pytest-host:
@@ -6,16 +6,17 @@ services:
     build: .
     depends_on:
      - selenium-hub
-     - selenium-firefox
+     - selenium-chrome
     entrypoint: [
-        "./wait-for-it.sh", "-t", "15", "selenium-firefox:5555", "--", "pytest",
-        "--remote", "--rmt-host=selenium-hub", "--rmt-port=4444"
+        "./wait-for-it.sh", "-t", "15", "selenium-chrome:5555", "--", "pytest",
+        "--remote", "--rmt-host=selenium-hub"
     ]
     # the wait-for-it.sh command makes the container wait until the Selenium containers are ready to work
-    command: [ "-n2" ]
+    # command: [ "-n2" ]
     # There will be "-n" tests running in parallel
     volumes:
       - ./remote_reports/:/selenium_tests/reports/
+      - ./remote_reports/:/selenium_tests/screenshots/
     networks:
       selenium_net: {}
 
@@ -27,9 +28,9 @@ services:
     networks:
       selenium_net: {}
 
-  selenium-firefox:
-    container_name: selenium-firefox
-    image: selenium/node-firefox${DEBUG:-}:3.141.59
+  selenium-chrome:
+    container_name: selenium-chrome
+    image: selenium/node-chrome:3.141.59-vanadium
     volumes:
       - /dev/shm:/dev/shm
     depends_on:
@@ -37,8 +38,6 @@ services:
     environment:
       - HUB_HOST=selenium-hub
       - HUB_PORT=4444
-      - NODE_MAX_INSTANCES=3        # If not set, tests won't be concurrently run
-      - NODE_MAX_SESSION=3          # If not set, tests won't be concurrently run
     networks:
       selenium_net: {}
     ports:

@@ -2,7 +2,7 @@
 
 
 from typing import NoReturn, Final
-from .base import BasePage
+from base import BasePage
 
 
 class SearchPage(BasePage):
@@ -13,7 +13,7 @@ class SearchPage(BasePage):
     def __init__(self, driver):
         super(SearchPage, self).__init__(driver)
 
-    # XPATH locators
+    # CSS locators
     _results_counter_text_locator = "//span[@class='heading-counter']"
     _error_notification_text_locator = "//div[@id='center_column']/p[@class='alert alert-warning']"
 
